@@ -74,6 +74,10 @@ function Categories({ date, type }) {
     setIsOpen(true);
   }
 
+  function handleNewCategoryClick() {
+    console.log("category");
+  }
+
   function handleCalculatorClose() {
     setIsOpen(false);
   }
@@ -115,6 +119,7 @@ function Categories({ date, type }) {
       <CategoriesList
         data={monthlyData}
         onCategoryClick={handleCategoryClick}
+        onNewCategoryClick={handleNewCategoryClick}
       />
       {isOpen ? (
         <CalculatorModal>
