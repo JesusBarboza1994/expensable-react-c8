@@ -10,6 +10,7 @@ export const Wrapper = styled.div`
   justify-content:center;
   gap: 1rem;
   max-width: 200px;
+  height: 84px;
   /* min-width: 200px; */
   background-color: ${colors.white};
   cursor: pointer;

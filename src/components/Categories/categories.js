@@ -6,6 +6,7 @@ import CategoriesList from "../CategoriesList";
 import styled from "@emotion/styled";
 import { colors, typography } from "../../styles";
 import Calculator from "../Calculator";
+import FormCategory from "../FormCategory/form-category";
 
 const Wrapper = styled.div`
   display: flex;
@@ -44,11 +45,24 @@ const CalculatorModal = styled.div`
   align-items: center;
 `;
 
+const NewCategoryModal = styled.div`
+  position: absolute;
+  top: 0;
+  bottom: 0;
+  right: 0;
+  left: 0;
+  background-color: rgb(23 23 23 / 75%);
+  display: flex;
+  justify-content: center;
+  align-items: center;
+`;
+
 function Categories({ date, type }) {
   const [categories, setCategories] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
   const [isOpen, setIsOpen] = useState(false);
+  const [isOpenForm, setIsOpenForm] = useState(false);
   const [selectedCategory, setSelectedCategory] = useState(null);
 
   const monthlyData = getMonthlyData(categories, date, type);
@@ -76,10 +90,15 @@ function Categories({ date, type }) {
 
   function handleNewCategoryClick() {
     console.log("category");
+    setIsOpenForm(true);
   }
 
   function handleCalculatorClose() {
     setIsOpen(false);
+  }
+
+  function handleFormClose() {
+    setIsOpenForm(false);
   }
 
   function handleCalcSubmit(categoryId, amount, date) {
@@ -103,6 +122,25 @@ function Categories({ date, type }) {
       .catch((error) => {
         console.log(error);
       });
+  }
+
+  function createCategory(data,event){
+    event.preventDefault();
+    console.log(data);
+    apiFetch("/categories",{
+      body:data
+    }).then((data) =>{console.log(data)})
+    .catch(error => console.log(error))
+    apiFetch("categories")
+    .then((data) => {
+      setCategories(data);
+      setLoading(false);
+    })
+    .catch((error) => {
+      setLoading(false);
+      setError(error);
+    });
+    setIsOpenForm(false);
   }
 
   if (loading) return <p>Loading categories...</p>;
@@ -130,6 +168,14 @@ function Categories({ date, type }) {
             date={date}
           />
         </CalculatorModal>
+      ) : null}
+      {isOpenForm ? (
+        <NewCategoryModal>
+          <FormCategory 
+            onClickCloseModal={handleFormClose}
+            onSubmit={createCategory}
+          />
+        </NewCategoryModal>
       ) : null}
     </Wrapper>
   );

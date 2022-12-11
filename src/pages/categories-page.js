@@ -6,6 +6,7 @@ import { typography } from "../styles";
 import { useParams, useSearchParams } from "react-router-dom";
 import React from "react";
 import { useSearchParamsWithLocal } from "../hooks";
+import SelectedTypes from "../components/SelectedTypes/selected-types";
 
 const Title = styled.h1`
   ${typography.head.sm}
@@ -24,7 +25,8 @@ function CategoriesPage() {
     "expensable_date"
   );
 
-  const type = params.type || "expense";
+  let type = params.type || "expense";
+  sessionStorage.setItem("type", type);
 
   const date = {
     year: +searchParams.get("year"),
@@ -49,9 +51,14 @@ function CategoriesPage() {
     }
   };
 
+  const handleTypeClick = () => {
+    // history.push('/income');
+  }
+
   return (
     <div>
       <Title>Categories</Title>
+      <SelectedTypes type={type} onTypeClick={handleTypeClick}/>
       <MonthPicker
         label={format(new Date(date.year, date.month), "MMMM yyyy")}
         onRightClick={handleRightClick}
